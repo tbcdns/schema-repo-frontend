@@ -1,0 +1,22 @@
+{
+  "name": "schema-repo-frontend",
+  "description": "Frontend for browsing an avro schema repo (https://github.com/schema-repo/schema-repo)",
+  "version": "0.1.0",
+  "author": "Thibaud Chardonnens",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "4.10.7",
+    "dustjs-linkedin": "2.5.1",
+    "dustjs-helpers": "1.5.0",
+    "consolidate": "0.10.0",
+    "body-parser": "1.10.1",
+    "http": "*"
+  },
+  "engines": {
+    "node": "*",
+    "npm": "*"
+  },
+  "license": "Apache 2.0"
+}

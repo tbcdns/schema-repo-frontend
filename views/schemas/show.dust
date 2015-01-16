@@ -1,0 +1,88 @@
+{>layout/}
+{<header}
+{?info}
+<div class="alert alert-{type} text-center" role="alert">
+  {info|s}<br>
+  <a href="?" class="alert-link">Back to subject</a>
+</div>
+{:else}
+<h4>{namespace}</h4>
+<h1>{name}</h1>
+<p class="lead">{description}</p>
+<p>Version: <strong>{version}</strong></p>
+{/info}
+{/header}
+{<content}
+{^info}
+<ul class="nav nav-pills nav-justified">
+  <li role="presentation" class="active"><a href="#home" role="tab" data-toggle="tab">Fields</a></li>
+  <li role="presentation"><a href="#raw" role="tab" data-toggle="tab">Raw schema</a></li>
+  <li role="presentation"><a href="#edit" role="tab" data-toggle="tab">Edit schema</a></li>
+  <li role="presentation" class="dropdown">
+        <a href="#" id="myTabDrop1" class="dropdown-toggle" data-toggle="dropdown" aria-controls="myTabDrop1-contents">Versions <span class="caret"></span></a>
+		<div class="dropdown-menu" style="padding: 15px; padding-bottom: 10px; width:100%;">
+			<form method="GET" class="text-center">
+				<input style="margin-bottom: 15px; margin-right: 10px;" type="number" value="{version}" min="0" placeholder="Version" id="version" name="version">
+				<input type="hidden" id="subject" value="{subject}">
+				<input class="btn btn-primary" type="button" id="getVersion" value="Get">
+			</form>
+		</div>
+      </li>
+</ul>
+<div class="tab-content">
+	<div role="tabpanel" class="tab-pane fade in active" id="home">
+		{#schemas}
+		{@eq key=type value="enum"}
+		<table class="table" id="{.name}">
+		<caption class="text-capitalize">{.type}: {.name}</caption>
+			<tr>
+				<td style="width: 30%;">
+					<ul>
+					{#.symbols}
+						<li><code>{.}</code></li>
+					{/.symbols}
+					</ul>
+				</td>
+				<td>{.doc}</td>
+			</tr>
+		</table>
+		{:else}
+		<table class="table table-striped" id="{.name}">
+			<caption class="text-capitalize">{.type}: {.namespace} - {.name}</caption>
+			<thead>
+				<tr>
+					<th>Field</th>
+					<th>Type</th>
+					<th>Default</th>
+					<th>Description</th>
+				</tr>
+			</thead>
+			<tbody>
+			{#.fields}
+				<tr>
+					<td class="col-md-2">{name}</td>
+					<td>{type_str|s}</td>
+					<td>{default|js}</td>
+					<td>{doc}</td>
+				</tr>
+			{/.fields}
+			</tbody>
+		</table>
+		{/eq}
+		{/schemas}
+	</div>
+	<div role="tabpanel" class="tab-pane" id="raw">
+		<code>{raw}</code>
+	</div>
+	<div role="tabpanel" class="tab-pane" id="edit">
+	<form method="POST" action="/schemas/{subject}" style="padding-top:10px;padding-bottom:10px;">
+	  <div class="form-group">
+	    <label for="sch">Schema</label>
+	    <textarea class="form-control" rows="30" name="sch">{raw}</textarea>
+	  </div>
+  		<button type="submit" class="btn btn-primary">Submit</button>
+	</form>
+	</div>
+</div><!--tab-content-->
+{/info}
+{/content}

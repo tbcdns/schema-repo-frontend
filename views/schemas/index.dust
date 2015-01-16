@@ -1,0 +1,26 @@
+{>layout/}
+{<header}
+<h1>Registered subjects</h1>
+{/header}
+{<content}
+<table class="table table-striped table-hover">
+	<thead>
+		<tr>
+			<th>Name</th>
+			<th class="text-center">Version</th>
+			<th>Description</th>
+		</tr>
+	</thead>
+	<tbody>
+		{#schemas}
+		<tr>
+			<td><a href="/schemas/{.name}">{.name}</a></td>
+			<td class="text-center">{.version}</td>
+			<td>{.desc}</td>
+		</tr>
+		{:else}
+		<tr><td colspan="3">No schemas registered</td></tr>
+		{/schemas}
+	</tbody>
+</table>
+{/content}
