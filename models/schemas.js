@@ -9,7 +9,8 @@ exports.get = function(name, cb){
 		host: config.ENDPOINT,
 		port: config.PORT,
 		path: '/schema-repo/'+name+'/latest',
-		method: 'GET'
+		method: 'GET',
+		headers: {'Accept':'text/plain'}
 	};
 	http.request(options, function(res){
 		res.setEncoding('utf8');
@@ -33,7 +34,8 @@ exports.getVersion = function(name, version, cb){
 			host: config.ENDPOINT,
 			port: config.PORT,
 			path: '/schema-repo/'+name+'/id/'+version,
-			method: 'GET'
+			method: 'GET',
+			headers: {'Accept':'text/plain'}
 		};
 
 	http.request(options, function(res){
@@ -61,7 +63,7 @@ exports.getAll = function(cb){
 		port: config.PORT,
 		path: '/schema-repo/',
 		method: 'GET',
-		headers: {'Accept':'*/*'}
+		headers: {'Accept':'text/plain'}
 	};
 	
 	http.request(options, function(res){
