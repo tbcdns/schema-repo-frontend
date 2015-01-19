@@ -2,22 +2,34 @@ var Schemas = require('../models/schemas.js');
 
 exports.index = function(req, res){
 	Schemas.getAll(function(err, schemas){//get all subjects
-		if(err) console.log(err.code);
-		var arr = [];
-		for(var i in schemas.schemas){//for each subject get its description and version
-			Schemas.get(schemas.schemas[i], function(err, schema){
-				arr.push({
-					name: schema.name,
-					version: schema.version,
-					desc: schema.schema.doc
+		if(err){
+				console.log(err.code);
+				var obj = {
+					info: '<strong>Error: </strong>'+err,
+					type: 'danger'
+				};
+				res.render('schemas/show.dust', obj);
+		} else {
+			var arr = [];
+			for(var i in schemas.schemas){//for each subject get its description and version
+				Schemas.get(schemas.schemas[i], function(err, schema){
+					if(err){
+						console.log(err);
+					} else{
+						arr.push({
+							name: schema.name,
+							version: schema.version,
+							desc: schema.schema.doc
+						});
+						if(arr.length === schemas.schemas.length){//means that all requests are terminated
+							var obj = {};
+							obj.schemas = arr;
+							obj.schemas.sort(keysrt('name'));
+							res.render('schemas/index.dust', obj);	
+						}
+					}
 				});
-				if(arr.length === schemas.schemas.length){//means that all request are terminated
-					var obj = {};
-					obj.schemas = arr;
-					obj.schemas.sort(keysrt('name'));
-					res.render('schemas/index.dust', obj);	
-				}
-			});
+			}
 		}
 	});	
 };
@@ -27,16 +39,24 @@ exports.show = function(req, res){
 	var version = req.params.version;
 	if(typeof version === 'undefined'){
 		Schemas.get(name, function(err, schema){
-			if(err)	console.log(err.code);
-			var obj = {};
-			obj.name = schema.schema.name;
-			obj.subject = name;
-			obj.namespace = schema.schema.namespace;
-			obj.description = schema.schema.doc;
-			obj.version = schema.version;
-			obj.raw = JSON.stringify(schema.schema, undefined, 2);
-			obj.schemas = parseSchema(schema.schema);
-			res.render('schemas/show.dust', obj);
+			if(err){
+				console.log(err.code);
+				var obj = {
+					info: '<strong>Error: </strong>'+err,
+					type: 'danger'
+				};
+				res.render('schemas/show.dust', obj);
+			} else {
+				var obj = {};
+				obj.name = schema.schema.name;
+				obj.subject = name;
+				obj.namespace = schema.schema.namespace;
+				obj.description = schema.schema.doc;
+				obj.version = schema.version;
+				obj.raw = JSON.stringify(schema.schema, undefined, 2);
+				obj.schemas = parseSchema(schema.schema);
+				res.render('schemas/show.dust', obj);
+			}
 		});
 	} else {
 		Schemas.getVersion(name, version, function(err, schema){

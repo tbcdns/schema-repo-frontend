@@ -22,7 +22,9 @@ exports.get = function(name, cb){
 				sch.schema = JSON.parse(data.split('\t')[1]);//extract schema
 				cb(null, sch);
 			});
-		} 		
+		} else {
+			cb(res.statusCode, null);
+		}  		
 	}).end();
 };
 
@@ -68,17 +70,21 @@ exports.getAll = function(cb){
 	
 	http.request(options, function(res){
 		res.setEncoding('utf8');
-		res.on('data', function(d){
-			var array = d.split('\n');
-			array.pop(); //remove last (empty) item
-			array.sort(); 
-			var obj = {};
-			obj.schemas = array;
-			cb(null, obj);
-		}).on('error', function(err){
-			console.error(err);
-			cb(err, null);
-		});
+		if(res.statusCode == 200){
+			res.on('data', function(d){
+				var array = d.split('\n');
+				array.pop(); //remove last (empty) item
+				array.sort(); 
+				var obj = {};
+				obj.schemas = array;
+				cb(null, obj);
+			}).on('error', function(err){
+				console.error(err);
+				cb(err, null);
+			});
+		} else {
+			cb(res.statusCode, null);
+		}
 	}).end();
 };
 
