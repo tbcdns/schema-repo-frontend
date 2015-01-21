@@ -12,7 +12,12 @@ exports.index = function(req, res){
 		} else {
 			var arr = [];
 			for(var i in schemas.schemas){//for each subject get its description and version
-				Schemas.get(schemas.schemas[i], function(err, schema){
+				arr.push({
+					name: schemas.schemas[i],
+					version: "N/A",
+					desc: "N/A"
+				});
+				/*Schemas.get(schemas.schemas[i], function(err, schema){
 					if(err){
 						console.log(err);
 					} else{
@@ -28,8 +33,11 @@ exports.index = function(req, res){
 							res.render('schemas/index.dust', obj);	
 						}
 					}
-				});
+				});*/
 			}
+			var obj = {};
+			obj.schemas = arr;
+			res.render('schemas/index.dust', obj);
 		}
 	});	
 };
